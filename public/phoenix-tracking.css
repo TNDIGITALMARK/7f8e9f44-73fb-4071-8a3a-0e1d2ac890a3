@@ -18,14 +18,42 @@
 
 /* ===== PHOENIX TRACKING BASE STYLES ===== */
 
-/* Selection mode cursor for entire page */
+/* Selection mode cursor for entire page - EXCEPT interactive elements */
 body[data-phoenix-selection-active="true"] {
   cursor: crosshair !important;
   user-select: none !important;
 }
 
+/* Restore normal functionality for interactive elements */
+body[data-phoenix-selection-active="true"] button,
+body[data-phoenix-selection-active="true"] [role="button"],
+body[data-phoenix-selection-active="true"] input,
+body[data-phoenix-selection-active="true"] select,
+body[data-phoenix-selection-active="true"] textarea,
+body[data-phoenix-selection-active="true"] a,
+body[data-phoenix-selection-active="true"] [data-radix-select-trigger],
+body[data-phoenix-selection-active="true"] [data-radix-select-item] {
+  cursor: pointer !important;
+  user-select: auto !important;
+  pointer-events: auto !important;
+}
+
 body[data-phoenix-selection-active="true"] [data-phoenix-id] {
   cursor: crosshair !important;
+}
+
+/* But allow interactive elements inside phoenix-tracked elements to work */
+body[data-phoenix-selection-active="true"] [data-phoenix-id] button,
+body[data-phoenix-selection-active="true"] [data-phoenix-id] [role="button"],
+body[data-phoenix-selection-active="true"] [data-phoenix-id] input,
+body[data-phoenix-selection-active="true"] [data-phoenix-id] select,
+body[data-phoenix-selection-active="true"] [data-phoenix-id] textarea,
+body[data-phoenix-selection-active="true"] [data-phoenix-id] a,
+body[data-phoenix-selection-active="true"] [data-phoenix-id] [data-radix-select-trigger],
+body[data-phoenix-selection-active="true"] [data-phoenix-id] [data-radix-select-item] {
+  cursor: pointer !important;
+  user-select: auto !important;
+  pointer-events: auto !important;
 }
 
 /* ===== ELEMENT HIGHLIGHTING STYLES ===== */
@@ -57,9 +85,23 @@ body[data-phoenix-selection-active="true"]:not([data-phoenix-disabled]) [data-ph
   outline: 2px solid #3b82f6 !important;
   outline-offset: 2px !important;
   z-index: 9999 !important;
-  
+
   box-shadow: 0 0 12px rgba(59, 130, 246, 0.3) !important;
-  
+
+}
+
+/* Ensure interactive elements inside tracked components remain clickable during hover */
+body[data-phoenix-selection-active="true"]:not([data-phoenix-disabled]) [data-phoenix-id]:hover button,
+body[data-phoenix-selection-active="true"]:not([data-phoenix-disabled]) [data-phoenix-id]:hover [role="button"],
+body[data-phoenix-selection-active="true"]:not([data-phoenix-disabled]) [data-phoenix-id]:hover input,
+body[data-phoenix-selection-active="true"]:not([data-phoenix-disabled]) [data-phoenix-id]:hover select,
+body[data-phoenix-selection-active="true"]:not([data-phoenix-disabled]) [data-phoenix-id]:hover textarea,
+body[data-phoenix-selection-active="true"]:not([data-phoenix-disabled]) [data-phoenix-id]:hover a,
+body[data-phoenix-selection-active="true"]:not([data-phoenix-disabled]) [data-phoenix-id]:hover [data-radix-select-trigger],
+body[data-phoenix-selection-active="true"]:not([data-phoenix-disabled]) [data-phoenix-id]:hover [data-radix-select-item] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 10000 !important;
 }
 
 /* NEVER override background images on hover - use outline only */
