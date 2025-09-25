@@ -198,3 +198,37 @@ body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }
+
+/* Ensure buttons and interactive elements are always clickable */
+button {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+/* Fix for Select components */
+[data-radix-select-trigger] {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+/* Ensure no overlay elements block interactions */
+.select-overlay {
+  pointer-events: none;
+}
+
+/* Fix for disabled button styling */
+button:disabled {
+  cursor: not-allowed;
+  pointer-events: auto !important;
+}
+
+/* Fix for Select dropdown positioning and interaction */
+[data-radix-select-content] {
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+[data-radix-select-item] {
+  cursor: pointer;
+  pointer-events: auto;
+}

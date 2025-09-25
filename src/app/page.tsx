@@ -31,18 +31,30 @@ export default function CaseAssessmentHub() {
   });
 
   const handleAnalyze = async () => {
-    if (!formData.title || !formData.description || !formData.caseType) return;
+    console.log('Analyze button clicked');
+    if (!formData.title || !formData.description || !formData.caseType) {
+      console.log('Missing required fields:', { title: !!formData.title, description: !!formData.description, caseType: !!formData.caseType });
+      return;
+    }
 
+    console.log('Starting analysis...');
     setIsAnalyzing(true);
 
-    // Simulate AI analysis delay
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    try {
+      // Simulate AI analysis delay
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
-    setAnalysis(mockAIAnalysis);
-    setIsAnalyzing(false);
+      setAnalysis(mockAIAnalysis);
+      console.log('Analysis completed successfully');
+    } catch (error) {
+      console.error('Analysis failed:', error);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const resetForm = () => {
+    console.log('Reset button clicked');
     setFormData({
       title: '',
       description: '',
@@ -55,6 +67,7 @@ export default function CaseAssessmentHub() {
     });
     setAnalysis(null);
     setIsAnalyzing(false);
+    console.log('Form reset successfully');
   };
 
   const stats = [
@@ -165,7 +178,14 @@ export default function CaseAssessmentHub() {
                     >
                       <SelectTrigger
                         id="case-type"
-                        onClick={() => console.log('Select trigger clicked')}
+                        className="cursor-pointer"
+                        onClick={(e) => {
+                          console.log('Select trigger clicked', e);
+                          e.stopPropagation();
+                        }}
+                        onPointerDown={(e) => {
+                          console.log('Select trigger pointer down', e);
+                        }}
                       >
                         <SelectValue placeholder="Select case type" />
                       </SelectTrigger>
@@ -287,9 +307,14 @@ export default function CaseAssessmentHub() {
               {/* Action Buttons */}
               <div className="flex gap-3">
                 <Button
-                  onClick={handleAnalyze}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleAnalyze();
+                  }}
                   disabled={!formData.title || !formData.description || !formData.caseType || isAnalyzing}
-                  className="flex-1 bg-legal-blue hover:bg-legal-blue/90"
+                  className="flex-1 bg-legal-blue hover:bg-legal-blue/90 cursor-pointer"
                 >
                   {isAnalyzing ? (
                     <>
@@ -304,7 +329,16 @@ export default function CaseAssessmentHub() {
                   )}
                 </Button>
 
-                <Button variant="outline" onClick={resetForm}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    resetForm();
+                  }}
+                  className="cursor-pointer"
+                >
                   Reset
                 </Button>
               </div>
