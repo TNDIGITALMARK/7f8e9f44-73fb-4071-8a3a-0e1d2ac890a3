@@ -156,13 +156,20 @@ export default function CaseAssessmentHub() {
                   <div className="space-y-2">
                     <Label htmlFor="case-type">Case Type *</Label>
                     <Select
+                      name="caseType"
                       value={formData.caseType}
-                      onValueChange={(value) => setFormData(prev => ({ ...prev, caseType: value }))}
+                      onValueChange={(value) => {
+                        console.log('Case type selected:', value);
+                        setFormData(prev => ({ ...prev, caseType: value }));
+                      }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger
+                        id="case-type"
+                        onClick={() => console.log('Select trigger clicked')}
+                      >
                         <SelectValue placeholder="Select case type" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent position="popper" sideOffset={5}>
                         <SelectItem value={CaseType.EMPLOYMENT_DISCRIMINATION}>
                           Employment Discrimination
                         </SelectItem>
