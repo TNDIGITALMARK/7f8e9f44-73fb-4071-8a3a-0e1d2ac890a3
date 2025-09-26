@@ -203,12 +203,15 @@ body {
 button {
   pointer-events: auto !important;
   cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 /* Fix for Select components */
 [data-radix-select-trigger] {
   pointer-events: auto !important;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 /* Ensure no overlay elements block interactions */
@@ -226,9 +229,35 @@ button:disabled {
 [data-radix-select-content] {
   z-index: 1000;
   pointer-events: auto;
+  position: relative;
 }
 
 [data-radix-select-item] {
   cursor: pointer;
   pointer-events: auto;
+  touch-action: manipulation;
+}
+
+/* Additional button interaction fixes */
+button:not(:disabled):active {
+  transform: translateY(1px);
+  transition: transform 0.1s ease;
+}
+
+/* Ensure form elements are interactive */
+input, textarea, select {
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+/* Fix for any potential overlay issues */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure interactive elements have proper focus states */
+button:focus-visible,
+[data-radix-select-trigger]:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }

@@ -30,14 +30,27 @@ export default function CaseAssessmentHub() {
     damages: ''
   });
 
-  const handleAnalyze = async () => {
-    console.log('Analyze button clicked');
+  const handleAnalyze = async (event?: React.MouseEvent) => {
+    console.log('Analyze button clicked', { event: !!event, formData });
+
+    // Prevent any event bubbling issues
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     if (!formData.title || !formData.description || !formData.caseType) {
-      console.log('Missing required fields:', { title: !!formData.title, description: !!formData.description, caseType: !!formData.caseType });
+      console.log('Missing required fields:', {
+        title: !!formData.title,
+        description: !!formData.description,
+        caseType: !!formData.caseType,
+        actualValues: { title: formData.title, description: formData.description, caseType: formData.caseType }
+      });
+      alert('Please fill in all required fields: Case Title, Case Type, and Detailed Description');
       return;
     }
 
-    console.log('Starting analysis...');
+    console.log('Starting analysis with data:', formData);
     setIsAnalyzing(true);
 
     try {
@@ -48,13 +61,21 @@ export default function CaseAssessmentHub() {
       console.log('Analysis completed successfully');
     } catch (error) {
       console.error('Analysis failed:', error);
+      alert('Analysis failed. Please try again.');
     } finally {
       setIsAnalyzing(false);
     }
   };
 
-  const resetForm = () => {
-    console.log('Reset button clicked');
+  const resetForm = (event?: React.MouseEvent) => {
+    console.log('Reset button clicked', { event: !!event });
+
+    // Prevent any event bubbling issues
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     setFormData({
       title: '',
       description: '',
@@ -173,13 +194,23 @@ export default function CaseAssessmentHub() {
                       value={formData.caseType}
                       onValueChange={(value) => {
                         console.log('Case type selected:', value);
-                        console.log('Updated form data will include caseType:', value);
-                        setFormData(prev => ({ ...prev, caseType: value }));
+                        console.log('Previous caseType:', formData.caseType);
+                        const updatedFormData = { ...formData, caseType: value };
+                        setFormData(updatedFormData);
+                        console.log('Form data updated:', updatedFormData);
+                      }}
+                      onOpenChange={(open) => {
+                        console.log('Select dropdown open state:', open);
                       }}
                     >
                       <SelectTrigger
                         id="case-type"
-                        className="cursor-pointer"
+                        className="cursor-pointer hover:bg-accent/50 transition-colors"
+                        onClick={(e) => {
+                          console.log('Select trigger clicked', { target: e.target, currentTarget: e.currentTarget });
+                          e.stopPropagation();
+                        }}
+                        style={{ pointerEvents: 'auto' }}
                       >
                         <SelectValue placeholder="Select case type" />
                       </SelectTrigger>
@@ -302,13 +333,10 @@ export default function CaseAssessmentHub() {
               <div className="flex gap-3">
                 <Button
                   type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleAnalyze();
-                  }}
+                  onClick={handleAnalyze}
                   disabled={!formData.title || !formData.description || !formData.caseType || isAnalyzing}
-                  className="flex-1 bg-legal-blue hover:bg-legal-blue/90 cursor-pointer"
+                  className="flex-1 bg-legal-blue hover:bg-legal-blue/90 cursor-pointer transition-colors"
+                  style={{ pointerEvents: 'auto' }}
                 >
                   {isAnalyzing ? (
                     <>
@@ -326,12 +354,9 @@ export default function CaseAssessmentHub() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    resetForm();
-                  }}
-                  className="cursor-pointer"
+                  onClick={resetForm}
+                  className="cursor-pointer hover:bg-accent transition-colors"
+                  style={{ pointerEvents: 'auto' }}
                 >
                   Reset
                 </Button>
