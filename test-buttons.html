@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Functionality Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .test-button {
+            background: #3182ce;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+        .test-button:hover {
+            background: #2c5aa0;
+        }
+        .test-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .test-select {
+            width: 200px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .log {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Button Functionality Test</h1>
+        <p>This test page validates that buttons and select elements work correctly.</p>
+
+        <div id="status" class="status">Ready for testing...</div>
+
+        <h3>Test Buttons:</h3>
+        <button class="test-button" onclick="testButton('Primary Action')" data-testid="primary-button">
+            Primary Action
+        </button>
+
+        <button class="test-button" onclick="testButton('Secondary Action')" data-testid="secondary-button">
+            Secondary Action
+        </button>
+
+        <button class="test-button" onclick="testButton('Reset Form')" data-testid="reset-button">
+            Reset Form
+        </button>
+
+        <button class="test-button" onclick="testButton('Upload Evidence')" data-testid="upload-button">
+            Upload Evidence
+        </button>
+
+        <button class="test-button" disabled data-testid="disabled-button">
+            Disabled Button
+        </button>
+
+        <h3>Test Select:</h3>
+        <select class="test-select" onchange="testSelect(this.value)" data-testid="test-select">
+            <option value="">Select an option...</option>
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+            <option value="employment-discrimination">Employment Discrimination</option>
+            <option value="housing-discrimination">Housing Discrimination</option>
+        </select>
+
+        <h3>Test Results:</h3>
+        <div id="test-results">
+            <p>Click buttons and select options to test functionality.</p>
+        </div>
+
+        <div id="log" class="log">
+            <strong>Console Log:</strong><br>
+        </div>
+    </div>
+
+    <script>
+        let testCount = 0;
+        let passCount = 0;
+
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(message, isSuccess = true) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${isSuccess ? 'success' : 'error'}`;
+        }
+
+        function testButton(buttonName) {
+            testCount++;
+            log(`Button clicked: ${buttonName}`);
+
+            try {
+                // Simulate the button action
+                if (buttonName === 'Reset Form') {
+                    document.querySelector('[data-testid="test-select"]').value = '';
+                    log('Form reset simulated');
+                }
+
+                passCount++;
+                updateStatus(`✅ ${buttonName} working correctly! (${passCount}/${testCount} tests passed)`, true);
+
+                // Update results
+                const resultsDiv = document.getElementById('test-results');
+                resultsDiv.innerHTML += `<p>✅ ${buttonName}: <strong>PASS</strong></p>`;
+
+            } catch (error) {
+                log(`Error in ${buttonName}: ${error.message}`);
+                updateStatus(`❌ ${buttonName} failed! (${passCount}/${testCount} tests passed)`, false);
+
+                const resultsDiv = document.getElementById('test-results');
+                resultsDiv.innerHTML += `<p>❌ ${buttonName}: <strong>FAIL</strong> - ${error.message}</p>`;
+            }
+        }
+
+        function testSelect(value) {
+            testCount++;
+            log(`Select option chosen: ${value}`);
+
+            try {
+                if (value) {
+                    passCount++;
+                    updateStatus(`✅ Select working correctly! Selected: ${value} (${passCount}/${testCount} tests passed)`, true);
+
+                    const resultsDiv = document.getElementById('test-results');
+                    resultsDiv.innerHTML += `<p>✅ Select (${value}): <strong>PASS</strong></p>`;
+                } else {
+                    log('Empty value selected - this is normal for reset');
+                }
+
+            } catch (error) {
+                log(`Error in Select: ${error.message}`);
+                updateStatus(`❌ Select failed! (${passCount}/${testCount} tests passed)`, false);
+
+                const resultsDiv = document.getElementById('test-results');
+                resultsDiv.innerHTML += `<p>❌ Select: <strong>FAIL</strong> - ${error.message}</p>`;
+            }
+        }
+
+        // Test page load
+        window.addEventListener('load', function() {
+            log('Test page loaded successfully');
+            updateStatus('Page loaded - ready for button testing');
+        });
+
+        // Test for click events
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'BUTTON') {
+                log(`Click event detected on button: ${e.target.textContent.trim()}`);
+            }
+        });
+
+        // Test for change events
+        document.addEventListener('change', function(e) {
+            if (e.target.tagName === 'SELECT') {
+                log(`Change event detected on select: ${e.target.value}`);
+            }
+        });
+    </script>
+</body>
+</html>

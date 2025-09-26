@@ -205,16 +205,28 @@ export default function CaseAssessmentHub() {
                     >
                       <SelectTrigger
                         id="case-type"
-                        className="cursor-pointer hover:bg-accent/50 transition-colors"
+                        className="cursor-pointer hover:bg-accent/50 transition-colors focus:ring-2 focus:ring-legal-blue focus:border-transparent"
                         onClick={(e) => {
                           console.log('Select trigger clicked', { target: e.target, currentTarget: e.currentTarget });
-                          e.stopPropagation();
+                          // Removed stopPropagation to allow proper select behavior
                         }}
-                        style={{ pointerEvents: 'auto' }}
+                        style={{
+                          pointerEvents: 'auto',
+                          zIndex: 'auto',
+                          position: 'relative'
+                        }}
+                        tabIndex={0}
+                        role="combobox"
+                        data-testid="case-type-select"
                       >
                         <SelectValue placeholder="Select case type" />
                       </SelectTrigger>
-                      <SelectContent position="popper" sideOffset={5}>
+                      <SelectContent
+                        position="popper"
+                        sideOffset={5}
+                        className="z-50 min-w-[200px]"
+                        style={{ pointerEvents: 'auto' }}
+                      >
                         <SelectItem value={CaseType.EMPLOYMENT_DISCRIMINATION}>
                           Employment Discrimination
                         </SelectItem>
@@ -333,10 +345,21 @@ export default function CaseAssessmentHub() {
               <div className="flex gap-3">
                 <Button
                   type="button"
-                  onClick={handleAnalyze}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Analyze button clicked - direct handler');
+                    handleAnalyze(e);
+                  }}
                   disabled={!formData.title || !formData.description || !formData.caseType || isAnalyzing}
-                  className="flex-1 bg-legal-blue hover:bg-legal-blue/90 cursor-pointer transition-colors"
-                  style={{ pointerEvents: 'auto' }}
+                  className="flex-1 bg-legal-blue hover:bg-legal-blue/90 cursor-pointer transition-colors focus:ring-2 focus:ring-legal-blue focus:ring-offset-2"
+                  style={{
+                    pointerEvents: 'auto',
+                    zIndex: 'auto',
+                    position: 'relative'
+                  }}
+                  tabIndex={0}
+                  data-testid="analyze-button"
                 >
                   {isAnalyzing ? (
                     <>
@@ -354,9 +377,20 @@ export default function CaseAssessmentHub() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={resetForm}
-                  className="cursor-pointer hover:bg-accent transition-colors"
-                  style={{ pointerEvents: 'auto' }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Reset button clicked - direct handler');
+                    resetForm(e);
+                  }}
+                  className="cursor-pointer hover:bg-accent transition-colors focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  style={{
+                    pointerEvents: 'auto',
+                    zIndex: 'auto',
+                    position: 'relative'
+                  }}
+                  tabIndex={0}
+                  data-testid="reset-button"
                 >
                   Reset
                 </Button>
@@ -402,15 +436,44 @@ export default function CaseAssessmentHub() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <Button className="w-full justify-start bg-legal-blue hover:bg-legal-blue/90">
+                  <Button
+                    className="w-full justify-start bg-legal-blue hover:bg-legal-blue/90 focus:ring-2 focus:ring-legal-blue focus:ring-offset-2"
+                    style={{ pointerEvents: 'auto' }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      console.log('Upload Evidence button clicked');
+                      // Add navigation or modal logic here
+                    }}
+                    data-testid="upload-evidence-button"
+                  >
                     <FileText className="h-4 w-4 mr-2" />
                     Upload Supporting Evidence
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    style={{ pointerEvents: 'auto' }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      console.log('Generate Legal Documents button clicked');
+                      // Add navigation or modal logic here
+                    }}
+                    data-testid="generate-docs-button"
+                  >
                     <Scale className="h-4 w-4 mr-2" />
                     Generate Legal Documents
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    style={{ pointerEvents: 'auto' }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      console.log('Schedule Legal Consultation button clicked');
+                      // Add navigation or modal logic here
+                    }}
+                    data-testid="schedule-consultation-button"
+                  >
                     <Users className="h-4 w-4 mr-2" />
                     Schedule Legal Consultation
                   </Button>
