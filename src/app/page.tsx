@@ -173,19 +173,13 @@ export default function CaseAssessmentHub() {
                       value={formData.caseType}
                       onValueChange={(value) => {
                         console.log('Case type selected:', value);
+                        console.log('Updated form data will include caseType:', value);
                         setFormData(prev => ({ ...prev, caseType: value }));
                       }}
                     >
                       <SelectTrigger
                         id="case-type"
                         className="cursor-pointer"
-                        onClick={(e) => {
-                          console.log('Select trigger clicked', e);
-                          e.stopPropagation();
-                        }}
-                        onPointerDown={(e) => {
-                          console.log('Select trigger pointer down', e);
-                        }}
                       >
                         <SelectValue placeholder="Select case type" />
                       </SelectTrigger>
